@@ -2,7 +2,8 @@ import express from "express";
 const authRouter = express.Router()
 import authController from "../controller/auth.controller"
 import authScehma from "../schema/auth.schema"
-const { celebrate, Joi, errors, Segments } = require('celebrate');
+
+import { celebrate } from "celebrate";
 
 
 authRouter.post("/signup", celebrate(authScehma.SignupSchema),authController.postRegister)

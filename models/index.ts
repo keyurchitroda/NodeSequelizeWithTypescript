@@ -6,9 +6,9 @@ const Sequelize = require("sequelize");
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || "development";
 const config = require(__dirname + "/../config/config.json")[env];
-const db :any = {};
+const db: any = {};
 
-let sequelize:any;
+let sequelize: any;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
@@ -21,12 +21,12 @@ if (config.use_env_variable) {
 }
 
 fs.readdirSync(__dirname)
-  .filter((file:string) => {
+  .filter((file: string) => {
     return (
       file.indexOf(".") !== 0 && file !== basename && file.slice(-3) === ".ts"
     );
   })
-  .forEach((file:any) => {
+  .forEach((file: any) => {
     const model = require(path.join(__dirname, file))(
       sequelize,
       Sequelize.DataTypes
@@ -44,5 +44,12 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 db.User = require("./user.model")(sequelize, Sequelize);
+db.Category = require("./category.model")(sequelize, Sequelize);
+db.Product = require("./product.model")(sequelize, Sequelize);
+
+db.Product.belongsTo(db.Category, {
+  foreignKey: "category_id",
+  as: "category",
+});
 
 export default db;

@@ -4,6 +4,9 @@ const { User } = db
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 
+interface MyUserRequest extends Request {
+  user?: any;
+}
 
 const postRegister = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -77,5 +80,6 @@ const postLogin = async (req: Request, res: Response, next: NextFunction) => {
 
 export default {
   postRegister,
-  postLogin
+  postLogin,
+  
 }

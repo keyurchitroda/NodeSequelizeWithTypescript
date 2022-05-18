@@ -1,4 +1,4 @@
-const { celebrate, Joi, errors, Segments } = require('celebrate');
+import { Joi } from 'celebrate';
 
 
 const SigninSchema = {
