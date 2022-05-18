@@ -25,10 +25,16 @@ const verifyUser = async (
         .json({ message: "Inavalid username or password..!", status: 400 });
     }
     let { id } = payload;
-
+    console.log(id);
     let user = await User.findOne({ where: { id } });
-    req.user = user;
-    next();
+    if (user) {
+      req.user = user;
+      next();
+    } else {
+      return res
+        .status(400)
+        .json({ message: "User not found..!", status: 400 });
+    }
   });
 };
 
@@ -37,7 +43,7 @@ const verifyAdmin = async (
   res: Response,
   next: NextFunction
 ) => {
-  if (req.user.role == "admin") {
+  if (req.user?.role == "admin") {
     next();
   } else {
     return res

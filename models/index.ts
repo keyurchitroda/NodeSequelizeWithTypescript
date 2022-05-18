@@ -46,10 +46,21 @@ db.Sequelize = Sequelize;
 db.User = require("./user.model")(sequelize, Sequelize);
 db.Category = require("./category.model")(sequelize, Sequelize);
 db.Product = require("./product.model")(sequelize, Sequelize);
+db.Order = require("./order.model")(sequelize, Sequelize);
 
 db.Product.belongsTo(db.Category, {
   foreignKey: "category_id",
   as: "category",
+});
+
+db.Order.belongsTo(db.Product, {
+  foreignKey: "product_id",
+  as: "product",
+});
+
+db.Order.belongsTo(db.User, {
+  foreignKey: "buyer_id",
+  as: "buyer",
 });
 
 export default db;

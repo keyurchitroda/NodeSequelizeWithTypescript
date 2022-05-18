@@ -3,7 +3,6 @@ const prodRouter = express.Router();
 import productController from "../controller/product.controller";
 import prodScehma from "../schema/product.schema";
 import verifyMiddleware from "../middleware/verifyUser";
-
 import { celebrate } from "celebrate";
 const { verifyUser, verifyAdmin } = verifyMiddleware;
 
