@@ -3,9 +3,12 @@ const app = express();
 const PORT = process.env.PORT || 3002;
 import db from "./models";
 import routes from "./routes/index";
+import Cors from "cors";
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(Cors());
 
 app.use("/v1/api", routes);
 

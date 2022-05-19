@@ -10,4 +10,6 @@ orderRouter.get("/all", verifyUser, verifyAdmin, orderController.AllOrder);
 
 orderRouter.get("/my", verifyUser, orderController.MyOrder);
 
+orderRouter.get("/search", verifyUser, orderController.searchOrder);
+
 export default orderRouter;

@@ -20,4 +20,10 @@ prodRouter.get(
   productController.showAllProduct
 );
 
+prodRouter.get(
+  "/search",
+  verifyMiddleware.verifyUser,
+  productController.searchProduct
+);
+
 export default prodRouter;

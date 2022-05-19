@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import db from "../models";
 const { Order, Product, User, Category } = db;
 import { v4 as uuidv4 } from "uuid";
+import Sequelize from "sequelize";
+const { col, Op } = Sequelize;
 
 interface MyUserRequest extends Request {
   user?: any;
@@ -144,8 +146,57 @@ const MyOrder = async (req: MyUserRequest, res: Response) => {
   }
 };
 
+const searchOrder = async (req: Request, res: Response) => {
+  try {
+    const { search } = req.query;
+    const order = await Order.findAll({
+      where: {
+        [Op.or]: [
+          {
+            id: {
+              [Op.like]: "%" + search + "%",
+            },
+          },
+        ],
+      },
+      order: [["id", "ASC"]],
+      attributes: { exclude: ["id", "updatedAt", "createdAt"] },
+      include: [
+        {
+          model: Product,
+          as: "product",
+          attributes: { exclude: ["id", "updatedAt", "createdAt"] },
+          include: {
+            model: Category,
+            as: "category",
+            attributes: ["category_name"],
+          },
+        },
+        {
+          model: User,
+          as: "buyer",
+          attributes: { exclude: ["id", "updatedAt", "createdAt", "password"] },
+        },
+      ],
+    });
+
+    if (!order) {
+      return res
+        .status(400)
+        .json({ message: "Order not found..!", status: 400 });
+    } else {
+      return res.status(200).json({
+        message: "Order successfully fetched..!",
+        status: 200,
+        response_data: order,
+      });
+    }
+  } catch (err) {}
+};
+
 export default {
   AddNewOrder,
   AllOrder,
   MyOrder,
+  searchOrder,
 };
