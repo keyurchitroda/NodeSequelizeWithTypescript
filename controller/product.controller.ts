@@ -13,6 +13,7 @@ const AddNewProduct = async (req: Request, res: Response) => {
       available_qty,
       price,
       image,
+      qty
     } = req.body;
     if (
       !category_id ||
@@ -53,7 +54,7 @@ const AddNewProduct = async (req: Request, res: Response) => {
 const showAllProduct = async (req: Request, res: Response) => {
   try {
     const product = await Product.findAll({
-      attributes: { exclude: ["id", "updatedAt", "createdAt"] },
+      attributes: { exclude: ["updatedAt", "createdAt"] },
       include: {
         model: Category,
         as: "category",

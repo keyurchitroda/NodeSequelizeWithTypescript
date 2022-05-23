@@ -14,14 +14,15 @@ interface ProductModel
   > {
   id: CreationOptional<number>;
   category_id: number;
-  product_name:string;
-  product_description:string;
-  available_qty:number;
-  price:number;
-  image:string;
+  product_name: string;
+  product_description: string;
+  available_qty: number;
+  qty: number;
+  price: number;
+  image: string;
 }
 
-module.exports = (sequelize:Sequelize, Sequelize:any) => {
+module.exports = (sequelize: Sequelize, Sequelize: any) => {
   const Product = sequelize.define(
     "Product",
     {
@@ -48,6 +49,9 @@ module.exports = (sequelize:Sequelize, Sequelize:any) => {
         allowNull: false,
       },
       available_qty: {
+        type: Sequelize.INTEGER,
+      },
+      qty: {
         type: Sequelize.INTEGER,
       },
       price: {
