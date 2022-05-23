@@ -14,8 +14,6 @@ const postRegister = async (
   next: NextFunction
 ) => {
   try {
-    console.log(req.body);
-
     const { firstName, lastName, email, password, role } = req.body;
 
     if (!firstName || !lastName || !email || !password) {
@@ -26,7 +24,7 @@ const postRegister = async (
 
     const users = await User.findOne({ where: { email: email } });
     if (users) {
-      return res.status(200).json({ message: "User already exist..!" });
+      return res.status(400).json({ message: "User already exist..!" });
     } else {
       const hashPassword = await bcryptjs.hashSync(password, 12);
       const newuser = await User.create({
@@ -73,7 +71,7 @@ const postLogin = async (req: Request, res: Response, next: NextFunction) => {
           .status(401)
           .json({ message: "Invalid username or password", status: 401 });
       } else {
-        const token = jwt.sign({ id: users.id }, "kkkeeeyyy");
+        const token = jwt.sign({ id: users.id, role: users.role }, "kkkeeeyyy");
         let data = {
           firstname: users.firstName,
           lastname: users.lastName,

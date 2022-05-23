@@ -110,7 +110,7 @@ const searchProduct = async (req: Request, res: Response) => {
       });
     }
   } catch (err) {
-    console.log("err- searchProduct",err)
+    console.log("err- searchProduct", err);
   }
 };
 
