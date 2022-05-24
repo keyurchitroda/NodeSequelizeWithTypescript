@@ -10,37 +10,39 @@ interface MyUserRequest extends Request {
 }
 
 const AddNewOrder = async (req: MyUserRequest, res: Response) => {
+  console.log(req.body);
+
   try {
     const {
       order_number,
-      product_id,
+      product,
       buyer_id,
       qty,
-      price,
+      total_price,
       payment_status,
       order_status,
     } = req.body;
-    if (!product_id || !qty) {
+    if (!product || !total_price) {
       return res
         .status(401)
         .json({ message: "Please add all fields..!", status: 401 });
     }
 
-    const product = await Product.findOne({ where: { id: product_id } });
+    // const products = await Product.findOne({ where: { id: product_id } });
 
-    if (qty > product.available_qty) {
-      return res
-        .status(400)
-        .json({ message: `Only ${product.available_qty} QTY available..!` });
-    }
+    // if (qty > product.available_qty) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: `Only ${product.available_qty} QTY available..!` });
+    // }
 
-    let total_price = product.price * qty;
+    // let total_price = product.price * qty;
 
     const neworder = await Order.create({
       order_number: uuidv4(),
-      product_id,
+      product: JSON.stringify(product),
       buyer_id: req.user.id,
-      qty,
+      qty: 1,
       price: total_price,
       payment_status,
       order_status,
@@ -50,13 +52,13 @@ const AddNewOrder = async (req: MyUserRequest, res: Response) => {
         .status(401)
         .json({ message: "Something went wrong..!", status: 401 });
     } else {
-      let total_available_qty = product.available_qty - qty;
-      console.log();
+      // let total_available_qty = products.available_qty - qty;
+      // console.log();
 
-      await Product.update(
-        { available_qty: total_available_qty },
-        { where: { id: product.id } }
-      );
+      // await Product.update(
+      //   { available_qty: total_available_qty },
+      //   { where: { id: products.id } }
+      // );
 
       return res
         .status(200)
@@ -72,16 +74,6 @@ const AllOrder = async (req: Request, res: Response) => {
     const order = await Order.findAll({
       attributes: { exclude: ["id", "updatedAt", "createdAt"] },
       include: [
-        {
-          model: Product,
-          as: "product",
-          attributes: { exclude: ["id", "updatedAt", "createdAt"] },
-          include: {
-            model: Category,
-            as: "category",
-            attributes: ["category_name"],
-          },
-        },
         {
           model: User,
           as: "buyer",
@@ -112,23 +104,6 @@ const MyOrder = async (req: MyUserRequest, res: Response) => {
         buyer_id: req.user.id,
       },
       attributes: { exclude: ["id", "updatedAt", "createdAt"] },
-      include: [
-        {
-          model: Product,
-          as: "product",
-          attributes: { exclude: ["id", "updatedAt", "createdAt"] },
-          include: {
-            model: Category,
-            as: "category",
-            attributes: ["category_name"],
-          },
-        },
-        {
-          model: User,
-          as: "buyer",
-          attributes: { exclude: ["id", "updatedAt", "createdAt", "password"] },
-        },
-      ],
     });
     if (!order) {
       return res

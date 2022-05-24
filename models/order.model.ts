@@ -14,7 +14,7 @@ interface OrderModel
   > {
   id: CreationOptional<number>;
   order_number: string;
-  product_id: number;
+  product: string;
   buyer_id: number;
   qty: number;
   price: number;
@@ -38,13 +38,9 @@ module.exports = (sequelize: Sequelize, Sequelize: any) => {
         allowNull: false,
         unique: true,
       },
-      product_id: {
+      product: {
         allowNull: false,
-        type: Sequelize.INTEGER,
-        references: {
-          model: "product",
-          key: "id",
-        },
+        type: Sequelize.STRING,
       },
       buyer_id: {
         allowNull: false,

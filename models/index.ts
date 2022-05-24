@@ -53,10 +53,10 @@ db.Product.belongsTo(db.Category, {
   as: "category",
 });
 
-db.Order.belongsTo(db.Product, {
-  foreignKey: "product_id",
-  as: "product",
-});
+// db.Order.belongsTo(db.Product, {
+//   foreignKey: "product_id",
+//   as: "product",
+// });
 
 db.Order.belongsTo(db.User, {
   foreignKey: "buyer_id",
