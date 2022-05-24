@@ -12,4 +12,18 @@ orderRouter.get("/my", verifyUser, orderController.MyOrder);
 
 orderRouter.get("/search", verifyUser, orderController.searchOrder);
 
+orderRouter.get(
+  "/pending",
+  verifyUser,
+  verifyAdmin,
+  orderController.PendingOrder
+);
+
+orderRouter.post(
+  "/orderstatus",
+  verifyUser,
+  verifyAdmin,
+  orderController.UpdateOrderStatus
+);
+
 export default orderRouter;

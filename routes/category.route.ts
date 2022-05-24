@@ -16,4 +16,6 @@ catRouter.post(
   categoryController.AddNewCategory
 );
 
+catRouter.get("/all", categoryController.showCategory);
+
 export default catRouter;

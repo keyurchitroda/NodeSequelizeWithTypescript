@@ -91,7 +91,23 @@ const postLogin = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const allUser = async (req: Request, res: Response) => {
+  try {
+    let users = await User.findAndCountAll();
+    if (!users) {
+      return res.status(400).json({ message: "User not found" });
+    } else {
+      return res
+        .status(200)
+        .json({ message: "User successfully fetched", response_data: users });
+    }
+  } catch (err) {
+    console.log("err - allUser()", err);
+  }
+};
+
 export default {
   postRegister,
   postLogin,
+  allUser,
 };

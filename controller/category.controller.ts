@@ -36,4 +36,21 @@ const AddNewCategory = async (req: Request, res: Response) => {
   }
 };
 
-export default { AddNewCategory };
+const showCategory = async (req: Request, res: Response) => {
+  try {
+    let categories = await Category.findAndCountAll();
+    if (!categories) {
+      return res.status(400).json({ message: "Category not found" });
+    } else {
+      return res
+        .status(200)
+        .json({
+          message: "Category successfully fetched",
+          response_data: categories,
+        });
+    }
+  } catch (err) {
+    console.log("err - showCategory()", err);
+  }
+};
+export default { AddNewCategory,showCategory };

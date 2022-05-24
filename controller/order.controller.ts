@@ -72,7 +72,38 @@ const AddNewOrder = async (req: MyUserRequest, res: Response) => {
 const AllOrder = async (req: Request, res: Response) => {
   try {
     const order = await Order.findAll({
-      attributes: { exclude: ["id", "updatedAt", "createdAt"] },
+      attributes: { exclude: ["updatedAt", "createdAt"] },
+      include: [
+        {
+          model: User,
+          as: "buyer",
+          attributes: { exclude: ["id", "updatedAt", "createdAt", "password"] },
+        },
+      ],
+    });
+    if (!order) {
+      return res
+        .status(400)
+        .json({ message: "Order not found..!", status: 400 });
+    } else {
+      return res.status(200).json({
+        message: "Order successfully fetched..!",
+        status: 200,
+        response_data: order,
+      });
+    }
+  } catch (err) {
+    console.log("err - AllOrder", err);
+  }
+};
+
+const PendingOrder = async (req: Request, res: Response) => {
+  try {
+    const order = await Order.findAll({
+      where: {
+        order_status: "Pending",
+      },
+      attributes: { exclude: ["updatedAt", "createdAt"] },
       include: [
         {
           model: User,
@@ -103,7 +134,7 @@ const MyOrder = async (req: MyUserRequest, res: Response) => {
       where: {
         buyer_id: req.user.id,
       },
-      attributes: { exclude: ["id", "updatedAt", "createdAt"] },
+      attributes: { exclude: ["updatedAt", "createdAt"] },
     });
     if (!order) {
       return res
@@ -169,9 +200,37 @@ const searchOrder = async (req: Request, res: Response) => {
   } catch (err) {}
 };
 
+const UpdateOrderStatus = async (req: Request, res: Response) => {
+  try {
+    const { order_id, type } = req.body;
+    let order = await Order.update(
+      { order_status: type == "Approve" ? "Approved" : "Rejected" },
+      { where: { id: order_id } }
+    );
+
+    console.log(order);
+
+    if (!order) {
+      return res
+        .status(400)
+        .json({ message: "Order not found..!", status: 400 });
+    } else {
+      return res.status(200).json({
+        message: "Order status successfully Updated..!",
+        status: 200,
+        response_data: order,
+      });
+    }
+  } catch (err) {
+    console.log("err - OrderApproved", err);
+  }
+};
+
 export default {
   AddNewOrder,
   AllOrder,
   MyOrder,
   searchOrder,
+  PendingOrder,
+  UpdateOrderStatus,
 };

@@ -63,7 +63,7 @@ module.exports = (sequelize: Sequelize, Sequelize: any) => {
         defaultValue: "Pending",
       },
       order_status: {
-        type: Sequelize.ENUM("Pending", "Approved"),
+        type: Sequelize.ENUM("Pending", "Approved","Rejected"),
         defaultValue: "Pending",
       },
     },
