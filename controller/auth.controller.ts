@@ -3,6 +3,8 @@ import db from "../models";
 const { User } = db;
 import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
+import Sequelize from "sequelize";
+const { col, Op } = Sequelize;
 
 interface MyUserRequest extends Request {
   user?: any;
@@ -106,8 +108,42 @@ const allUser = async (req: Request, res: Response) => {
   }
 };
 
+const SearchUserByName = async (req: Request, res: Response) => {
+  try {
+    const { search } = req.query;
+    const product = await User.findAll({
+      where: {
+        [Op.or]: [
+          {
+            firstName: {
+              [Op.like]: "%" + search + "%",
+            },
+          },
+        ],
+      },
+      order: [["id", "ASC"]],
+      attributes: { exclude: ["id", "updatedAt", "createdAt"] },
+    });
+
+    if (!product) {
+      return res
+        .status(400)
+        .json({ message: "Product not found..!", status: 400 });
+    } else {
+      return res.status(200).json({
+        message: "Product successfully fetched..!",
+        status: 200,
+        response_data: product,
+      });
+    }
+  } catch (err) {
+    console.log("err- searchProduct", err);
+  }
+};
+
 export default {
   postRegister,
   postLogin,
   allUser,
+  SearchUserByName,
 };

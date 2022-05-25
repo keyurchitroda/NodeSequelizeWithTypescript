@@ -17,4 +17,7 @@ authRouter.post(
 );
 authRouter.get("/all", authController.allUser);
 
+authRouter.get("/searchuser", authController.SearchUserByName);
+
+
 export default authRouter;

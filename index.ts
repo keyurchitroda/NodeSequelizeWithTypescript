@@ -10,6 +10,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(Cors());
 
+
+
 app.use("/v1/api", routes);
 
 db.sequelize.sync({ force: false }).then(() => {

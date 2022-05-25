@@ -13,7 +13,7 @@ const AddNewProduct = async (req: Request, res: Response) => {
       available_qty,
       price,
       image,
-      qty
+      qty,
     } = req.body;
     if (
       !category_id ||
@@ -115,8 +115,47 @@ const searchProduct = async (req: Request, res: Response) => {
   }
 };
 
+const searchProductByCategory = async (req: Request, res: Response) => {
+  try {
+    const { cat_id } = req.query;
+    const product = await Product.findAll({
+      where: {
+        [Op.or]: [
+          {
+            category_id: {
+              [Op.like]: "%" + cat_id + "%",
+            },
+          },
+        ],
+      },
+      order: [["id", "ASC"]],
+      attributes: { exclude: ["id", "updatedAt", "createdAt"] },
+      include: {
+        model: Category,
+        as: "category",
+        attributes: ["category_name"],
+      },
+    });
+
+    if (!product) {
+      return res
+        .status(400)
+        .json({ message: "Product not found..!", status: 400 });
+    } else {
+      return res.status(200).json({
+        message: "Product successfully fetched..!",
+        status: 200,
+        response_data: product,
+      });
+    }
+  } catch (err) {
+    console.log("err- searchProduct", err);
+  }
+};
+
 export default {
   AddNewProduct,
   showAllProduct,
   searchProduct,
+  searchProductByCategory,
 };
