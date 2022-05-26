@@ -102,6 +102,7 @@ const PendingOrder = async (req: Request, res: Response) => {
     const order = await Order.findAll({
       where: {
         order_status: "Pending",
+        payment_status: "Success",
       },
       attributes: { exclude: ["updatedAt", "createdAt"] },
       include: [
